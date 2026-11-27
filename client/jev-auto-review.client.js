@@ -47,6 +47,9 @@ window.__ModuleLoader__.load({
       { id: 'pending-action', label: 'sectionPendingAction' },
     ]
 
+    /** 字段提示行的词典键：hint 加首字母大写的字段名。 */
+    const hintKey = name => `hint${name[0].toUpperCase()}${name.slice(1)}`
+
     const zh = {
       title: 'Jev 级联审查配置',
       summary: '常规只读调用由 TypeSafe System One 模型直接放行；此处修改即时生效，无需重启。',
@@ -131,7 +134,7 @@ window.__ModuleLoader__.load({
 
       if (entry.kind === 'secret' || entry.kind === 'text') {
         return h('div', null,
-          h(FieldLabel, { id, t, label: entry.label, hint: `hint${entry.name}` }),
+          h(FieldLabel, { id, t, label: entry.label, hint: hintKey(entry.name) }),
           h('input', {
             id,
             type: entry.kind === 'secret' ? 'password' : 'text',
@@ -156,7 +159,7 @@ window.__ModuleLoader__.load({
       if (entry.kind === 'slider') {
         const numeric = typeof draft === 'number' && Number.isFinite(draft) ? draft : 0.98
         return h('div', null,
-          h(FieldLabel, { id, t, label: entry.label, hint: `hint${entry.name}` }),
+          h(FieldLabel, { id, t, label: entry.label, hint: hintKey(entry.name) }),
           h('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
             h('input', {
               id,
@@ -180,7 +183,7 @@ window.__ModuleLoader__.load({
       if (entry.kind === 'number') {
         const text = draft === undefined || draft === null ? '' : String(draft)
         return h('div', null,
-          h(FieldLabel, { id, t, label: entry.label, hint: `hint${entry.name}` }),
+          h(FieldLabel, { id, t, label: entry.label, hint: hintKey(entry.name) }),
           h('input', {
             id,
             type: 'number',
@@ -217,14 +220,14 @@ window.__ModuleLoader__.load({
           }),
           h('div', null,
             h('label', { htmlFor: id, style: { fontWeight: 600, fontSize: 13 } }, t(entry.label)),
-            h('p', { style: { margin: '2px 0 0', fontSize: 12, opacity: 0.7 } }, t(`hint${entry.name}`)),
+            h('p', { style: { margin: '2px 0 0', fontSize: 12, opacity: 0.7 } }, t(hintKey(entry.name))),
           ),
         )
       }
 
       if (entry.kind === 'sections') {
         const selected = Array.isArray(draft) ? draft : []
-        const blocks = [h(FieldLabel, { key: 'label', id, t, label: entry.label, hint: `hint${entry.name}` })]
+        const blocks = [h(FieldLabel, { key: 'label', id, t, label: entry.label, hint: hintKey(entry.name) })]
         SECTIONS.forEach((section, index) => {
           const checked = selected.indexOf(section.id) >= 0
           /* pending-action 与最后一个选中项不可取消：提交也会被 Host 校验拒绝 */
@@ -252,7 +255,7 @@ window.__ModuleLoader__.load({
 
       /* lines：allowTools，每行一个工具名 */
       return h('div', null,
-        h(FieldLabel, { id, t, label: entry.label, hint: `hint${entry.name}` }),
+        h(FieldLabel, { id, t, label: entry.label, hint: hintKey(entry.name) }),
         h('textarea', {
           id,
           rows: 4,
